@@ -23,6 +23,12 @@ void ATankAIController::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("No Player Tank Existing in the world"));
 	}
 }
+void ATankAIController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	AimTowardsTank();
+}
+
 ATank * ATankAIController::getPlayerTank()
 {
 	return Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
@@ -30,4 +36,8 @@ ATank * ATankAIController::getPlayerTank()
 ATank * ATankAIController::getAITank() const
 {
 	return Cast<ATank>(GetPawn());
+}
+void ATankAIController::AimTowardsTank() {
+	if(getPlayerTank())
+		getAITank()->AimAt(getPlayerTank()->GetActorLocation());
 }

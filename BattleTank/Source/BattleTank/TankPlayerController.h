@@ -24,6 +24,7 @@ private:
 	void AimTowardsCrosshair();
 
 	bool GetSightRayHitLocation(FVector& hit) const;	//True if hits landscape
+	bool GetLookDirection(FVector2D ScreenLocation, OUT FVector &LookDirection) const;
 
 public:
 	virtual void Tick(float DeltaTime) override;
@@ -34,5 +35,4 @@ public:
 		float CrossHairYLocation = 0.33333333;
 	UPROPERTY(EditAnywhere)
 		float LineTraceRange = 100000;
-	bool GetLookDirection(FVector2D ScreenLocation, OUT FVector &LookDirection) const;
 };
