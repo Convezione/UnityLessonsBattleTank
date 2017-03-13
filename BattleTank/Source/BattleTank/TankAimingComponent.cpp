@@ -3,7 +3,7 @@
 #include "BattleTank.h"
 #include "TankAimingComponent.h"
 #include "TankBarrel.h"
-
+#include "TankTurret.h"
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
 {
@@ -41,7 +41,7 @@ void UTankAimingComponent::AimAt(FVector HitLocation,float launchSpeed)
 	if (UGameplayStatics::SuggestProjectileVelocity(
 		this,
 		OUT launchDirection,
-		barrel->GetSocketLocation(FName("BarrelEnd")),
+		barrel->GetSocketLocation(FName("Barrel End")),
 		HitLocation,
 		launchSpeed,
 		false,
@@ -54,8 +54,11 @@ void UTankAimingComponent::AimAt(FVector HitLocation,float launchSpeed)
 		)
 		) 
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Firing at %s"), *launchDirection.GetSafeNormal().ToString());
+		UE_LOG(LogTemp, Warning, TEXT("Aim solution found at: %f"), GetWorld()->GetTimeSeconds());
 		MoveBarrel(launchDirection.GetSafeNormal());
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("Aim solution not found at: %f"), GetWorld()->GetTimeSeconds());
 	}
 
 
@@ -66,6 +69,11 @@ void UTankAimingComponent::SetBarrelReference(UTankBarrel * toSet)
 	barrel = toSet;
 	return;
 }
+void UTankAimingComponent::SetTurretReference(UTankTurret * toSet)
+{
+	turret = toSet;
+	return;
+}
 
 void UTankAimingComponent::MoveBarrel(FVector AimDirection)
 {
@@ -73,7 +81,6 @@ void UTankAimingComponent::MoveBarrel(FVector AimDirection)
 	FRotator barrelRotator = barrel->GetForwardVector().Rotation();
 	FRotator aimRotation = AimDirection.Rotation();
 	FRotator deltaRotator = aimRotation - barrelRotator;
-	UE_LOG(LogTemp, Warning, TEXT("Firing towards %s"), *aimRotation.ToString());
 
-	barrel->Elevate(5.0f); //TODO remove magic number
+	barrel->Elevate(deltaRotator.Pitch); //TODO remove magic number
 }
