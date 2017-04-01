@@ -20,6 +20,7 @@ void ATankPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	AimTowardsCrosshair();
+	
 }
 
 ATank* ATankPlayerController::getControlledTank() const {
@@ -49,7 +50,7 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& hit) const {
 		FHitResult hitResult;
 		auto StartLocation = PlayerCameraManager->GetCameraLocation();
 		auto EndLocation = StartLocation + hit*LineTraceRange;
-		if (GetWorld()->LineTraceSingleByChannel(hitResult,
+		if (GetWorld()->LineTraceSingleByChannel(OUT hitResult,
 			StartLocation,
 			EndLocation,
 			ECollisionChannel::ECC_Visibility,
