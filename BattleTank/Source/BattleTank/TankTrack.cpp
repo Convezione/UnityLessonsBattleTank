@@ -11,10 +11,4 @@ void UTankTrack::SetThrottle(float throttle) {
 	auto TankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
 	TankRoot->AddForceAtLocation(ForceApplied, ForceLocation);
 }
-void UTankTrack::SetAcceleration(float amount) {
-	auto ForceApplied = GetForwardVector()*amount*MaxDrivingForce;
-	auto ForceLocation = GetComponentLocation();
-	auto TankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
-	TankRoot->AddForceAtLocation(ForceApplied, ForceLocation);
-}
 
