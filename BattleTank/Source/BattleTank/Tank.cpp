@@ -7,6 +7,7 @@
 #include "TankTurret.h"
 #include "Projectile.h"
 
+
 // Sets default values
 ATank::ATank()
 {
@@ -46,7 +47,7 @@ void ATank::SetTurretReference(UTankTurret * toSet)
 
 
 void ATank::Shoot() {
-	UE_LOG(LogTemp, Warning, TEXT("Tank: %s firing."), *(this->GetName()));
+	//UE_LOG(LogTemp, Warning, TEXT("Tank: %s firing."), *(this->GetName()));
 	bool reloaded = FPlatformTime::Seconds() - lastFireTime >= reloadTimeSeconds;
 	if (localBarrel && reloaded) {
 		auto projectile = GetWorld()->SpawnActor<AProjectile>(projectileBlueprint, 

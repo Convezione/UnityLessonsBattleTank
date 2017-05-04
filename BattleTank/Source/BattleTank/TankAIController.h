@@ -21,5 +21,7 @@ private:
 	ATank* PlayerTank;
 	virtual void Tick(float DeltaTime) override;
 	void AimTowardsTank();
-	
+	UPROPERTY(EditDefaultsOnly, Category = Movement)
+		float AcceptanceRadius = 3000;
+
 };
