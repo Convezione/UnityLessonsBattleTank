@@ -13,7 +13,7 @@ class BATTLETANK_API UTankTrack : public UStaticMeshComponent
 {
 	GENERATED_BODY()
 public:
-	UFUNCTION(BlueprintCallable, Category = Movement)
+	UFUNCTION(BlueprintCallable, Category = "Movement")
 		void SetThrottle(float throttle);
 	//Half of max force per track in Newton
 	UPROPERTY(EditDefaultsOnly)

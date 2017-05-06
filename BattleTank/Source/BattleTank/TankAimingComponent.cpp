@@ -23,7 +23,10 @@ void UTankAimingComponent::BeginPlay()
 	// ...
 	
 }
-
+void UTankAimingComponent::Initialise(UTankBarrel* bToSet, UTankTurret* tToSet) { 
+	barrel = bToSet;
+	turret = tToSet;
+}
 
 // Called every frame
 void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -35,7 +38,7 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 void UTankAimingComponent::AimAt(FVector HitLocation,float launchSpeed)
 {
 	
-	if (!barrel) return;
+	if (!ensure(barrel)) return;
 	FVector launchDirection;
 
 	if (UGameplayStatics::SuggestProjectileVelocity(
@@ -64,19 +67,9 @@ void UTankAimingComponent::AimAt(FVector HitLocation,float launchSpeed)
 
 }
 
-void UTankAimingComponent::SetBarrelReference(UTankBarrel * toSet)
-{
-	barrel = toSet;
-	return;
-}
-void UTankAimingComponent::SetTurretReference(UTankTurret * toSet)
-{
-	turret = toSet;
-	return;
-}
-
 void UTankAimingComponent::MoveBarrel(FVector AimDirection)
 {
+	if (!ensure(barrel && turret)) { return; }
 	//Compute difference between rotation
 	FRotator barrelRotator = barrel->GetForwardVector().Rotation();
 	FRotator aimRotation = AimDirection.Rotation();

@@ -8,6 +8,14 @@
 #define OUT
 class UTankBarrel;	//Forward declaration
 class UTankTurret;
+
+UENUM()
+enum class EFiringStatus : uint8 {
+	Locked,
+	Aiming,
+	Reloading
+};
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BATTLETANK_API UTankAimingComponent : public UActorComponent
 {
@@ -16,10 +24,14 @@ class BATTLETANK_API UTankAimingComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UTankAimingComponent();
-	
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+		void Initialise(UTankBarrel* bToSet, UTankTurret* tToSet);
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	UPROPERTY(BlueprintReadOnly, Category = "Setup")
+		EFiringStatus status = EFiringStatus::Aiming;
+
 
 	UTankBarrel* barrel = nullptr;
 	UTankTurret* turret = nullptr;
@@ -28,8 +40,5 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void AimAt(FVector,float);
 		
-	void SetBarrelReference(UTankBarrel* toSet);
-	void SetTurretReference(UTankTurret* toSet);
-
 	void MoveBarrel(FVector AimDirection);
 };

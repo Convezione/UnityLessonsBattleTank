@@ -5,17 +5,21 @@
 #include "TankTrack.h"
 
 void UTankMovementComponent::Initialise(UTankTrack* lToSet, UTankTrack* rToSet) {
-	if (!lToSet || !rToSet) {
+	if (!ensure(lToSet) || !ensure(rToSet)) {
 		return;
 	}
 	rightTrack = rToSet;
 	leftTrack = lToSet;
 }
 void UTankMovementComponent::IntendMoveForward(float Throw) {
+	if (!ensure(rightTrack && leftTrack)) {
+		return;
+	}
 	rightTrack->SetThrottle(Throw);
 	leftTrack->SetThrottle(Throw);
 }
 void UTankMovementComponent::IntendTurnRight(float Throw) {
+	if(!ensure(rightTrack && leftTrack))
 	rightTrack->SetThrottle(-Throw);
 	leftTrack->SetThrottle(Throw);
 }

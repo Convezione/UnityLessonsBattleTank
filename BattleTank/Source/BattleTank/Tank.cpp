@@ -13,43 +13,25 @@ ATank::ATank()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
-	TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("Aiming Component"));
+	//TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("Aiming Component"));
 }
 
 // Called when the game starts or when spawned
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	localBarrel = FindComponentByClass<UTankBarrel>();
 }
 
-// Called to bind functionality to input
-void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-}
 
-void ATank::AimAt(FVector HitLocation)
-{
-	TankAimingComponent->AimAt(HitLocation,launchSpeed);
-}
-void ATank::SetBarrelReference(UTankBarrel * toSet)
-{
-	TankAimingComponent->SetBarrelReference(toSet);
-	localBarrel = toSet;
-	return;
-}
-void ATank::SetTurretReference(UTankTurret * toSet)
-{
-	TankAimingComponent->SetTurretReference(toSet);
-	return;
-}
+
 
 
 void ATank::Shoot() {
 	//UE_LOG(LogTemp, Warning, TEXT("Tank: %s firing."), *(this->GetName()));
+	if (!ensure(localBarrel)) { return; }
 	bool reloaded = FPlatformTime::Seconds() - lastFireTime >= reloadTimeSeconds;
-	if (localBarrel && reloaded) {
+	if (reloaded) {
 		auto projectile = GetWorld()->SpawnActor<AProjectile>(projectileBlueprint, 
 											localBarrel->GetSocketLocation(FName("Barrel End")),
 											localBarrel->GetSocketRotation(FName("Barrel End")), 
