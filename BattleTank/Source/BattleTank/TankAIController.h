@@ -9,16 +9,16 @@
 /**
  * 
  */
-class ATank;
-
+class UTankAimingComponent;
 UCLASS()
 class BATTLETANK_API ATankAIController : public AAIController
 {
 	GENERATED_BODY()
 private:
-	ATank* AITank;
+	APawn* AITank;
+	UTankAimingComponent* aimingComponent;
 	virtual void BeginPlay() override;
-	ATank* PlayerTank;
+	APawn* PlayerTank;
 	virtual void Tick(float DeltaTime) override;
 	void AimTowardsTank();
 	UPROPERTY(EditDefaultsOnly, Category ="Movement")
