@@ -32,12 +32,23 @@ void UTankAimingComponent::Initialise(UTankBarrel* bToSet, UTankTurret* tToSet) 
 	turret = tToSet;
 }
 
+EFiringStatus UTankAimingComponent::getFiringStatus() const
+{
+	return status;
+}
+
 // Called every frame
 void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	if ((FPlatformTime::Seconds() - lastFireTime) > reloadTimeSeconds) {
+	if ((FPlatformTime::Seconds() - lastFireTime) < reloadTimeSeconds) {
 		status = EFiringStatus::Reloading;
+	}
+	else if (IsBarrelMoving()) {
+		status = EFiringStatus::Aiming;
+	}
+	else {
+		status = EFiringStatus::Locked;
 	}
 }
 void UTankAimingComponent::AimAt(FVector HitLocation)
@@ -63,7 +74,8 @@ void UTankAimingComponent::AimAt(FVector HitLocation)
 		) 
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("Aim solution found at: %f"), GetWorld()->GetTimeSeconds());
-		MoveBarrel(launchDirection.GetSafeNormal());
+		aimVector = launchDirection.GetSafeNormal();
+		MoveBarrel(aimVector);
 	}
 	else {
 		//UE_LOG(LogTemp, Warning, TEXT("Aim solution not found at: %f"), GetWorld()->GetTimeSeconds());
@@ -81,7 +93,14 @@ void UTankAimingComponent::MoveBarrel(FVector AimDirection)
 	FRotator deltaRotator = aimRotation - barrelRotator;
 
 	barrel->Elevate(deltaRotator.Pitch); 
-	turret->Rotate(deltaRotator.Yaw);
+	turret->Rotate((FMath::Abs(deltaRotator.Yaw)<180)?deltaRotator.Yaw:-deltaRotator.Yaw);
+}
+
+bool UTankAimingComponent::IsBarrelMoving()
+{
+	if (!ensure(barrel)) { return false; }
+	auto barrelForward = barrel->GetForwardVector();
+	return !barrelForward.Equals(aimVector,0.01f);
 }
 
 void UTankAimingComponent::Shoot() {

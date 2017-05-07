@@ -27,6 +27,7 @@ public:
 	UTankAimingComponent();
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 		void Initialise(UTankBarrel* bToSet, UTankTurret* tToSet);
+	EFiringStatus getFiringStatus() const;
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -52,4 +53,6 @@ private:
 		double reloadTimeSeconds = 3;
 	double lastFireTime = 0;
 	void MoveBarrel(FVector AimDirection);
+	bool IsBarrelMoving();
+	FVector aimVector;
 };
