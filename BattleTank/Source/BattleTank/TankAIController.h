@@ -21,7 +21,8 @@ private:
 	APawn* PlayerTank;
 	virtual void Tick(float DeltaTime) override;
 	void AimTowardsTank();
+protected:
 	UPROPERTY(EditDefaultsOnly, Category ="Movement")
-		float AcceptanceRadius = 3000;
+		float AcceptanceRadius = 8000;
 
 };
